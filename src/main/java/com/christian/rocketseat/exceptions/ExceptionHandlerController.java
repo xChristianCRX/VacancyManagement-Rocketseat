@@ -1,4 +1,4 @@
-package com.christian.rocketseat.modules.exceptions;
+package com.christian.rocketseat.exceptions;
 
 import java.util.ArrayList;
 import java.util.List;
