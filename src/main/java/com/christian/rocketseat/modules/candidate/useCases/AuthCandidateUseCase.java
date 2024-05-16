@@ -1,11 +1,12 @@
 package com.christian.rocketseat.modules.candidate.useCases;
 
+import javax.naming.AuthenticationException;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.christian.rocketseat.modules.candidate.CandidateRepository;
 import com.christian.rocketseat.modules.candidate.dto.AuthCandidateRequestDTO;
 import com.christian.rocketseat.modules.candidate.dto.AuthCandidateResponseDTO;
-import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,7 +29,7 @@ public class AuthCandidateUseCase {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public AuthCandidateResponseDTO execute(AuthCandidateRequestDTO authCandidateRequestDTO){
+    public AuthCandidateResponseDTO execute(AuthCandidateRequestDTO authCandidateRequestDTO) throws AuthenticationException{
         var candidate = this.candidateRepository.findByUsername(authCandidateRequestDTO.username())
                 .orElseThrow(() -> {
                     throw new UsernameNotFoundException("Username/Password incorrect");
@@ -36,7 +37,7 @@ public class AuthCandidateUseCase {
 
         var passwordMatches = this.passwordEncoder.matches(authCandidateRequestDTO.password(), candidate.getPassword());
 
-        if(!passwordMatches){
+        if(!passwordMatches) {
             throw new AuthenticationException();
         }
 
@@ -45,7 +46,7 @@ public class AuthCandidateUseCase {
         var token = JWT.create()
                 .withIssuer("christian")
                 .withSubject(candidate.getId().toString())
-                .withClaim("roles", Arrays.asList("candidate"))
+                .withClaim("roles", Arrays.asList("CANDIDATE"))
                 .withExpiresAt(expiresIn)
                 .sign(algorithm);
 
