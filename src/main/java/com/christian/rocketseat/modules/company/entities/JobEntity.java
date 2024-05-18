@@ -3,6 +3,7 @@ package com.christian.rocketseat.modules.company.entities;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +29,15 @@ public class JobEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Schema(example = "Vaga para design")
     private String description;
+
+    @Schema(example = "Gympass")
     private String benefits;
 
     @NotBlank(message = "Esse campo é obrigatório!")
+    @Schema(example = "Pleno")
     private String level;
 
     @ManyToOne()
